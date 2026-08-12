@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CreatorHub — Find Creative Talent</title>
+<style>
+:root{--bg:#0b1020;--card:#121a2f;--card2:#18223b;--text:#f5f7ff;--muted:#aab3ca;--accent:#7c5cff;--accent2:#19c7a3;--line:#27314d}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(135deg,#080c18,#111a31);color:var(--text)}
+header{position:sticky;top:0;z-index:20;background:rgba(8,12,24,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav{max-width:1150px;margin:auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-size:22px;font-weight:800}.logo span{color:var(--accent)}
+nav a{color:var(--muted);text-decoration:none;margin:0 8px;font-size:14px}
+button,.btn{border:0;border-radius:10px;padding:11px 16px;background:var(--accent);color:white;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.hero{max-width:1150px;margin:auto;padding:70px 20px 35px;text-align:center}
+.hero h1{font-size:clamp(38px,7vw,68px);line-height:1.02;margin:0 0 18px}.hero h1 span{color:var(--accent)}
+.hero p{max-width:680px;margin:0 auto 25px;color:var(--muted);font-size:18px}
+.search{max-width:760px;margin:25px auto 0;display:flex;gap:10px}.search input{flex:1;padding:15px;border-radius:12px;border:1px solid var(--line);background:#0e1527;color:white}
+.section{max-width:1150px;margin:auto;padding:40px 20px}.section h2{text-align:center;margin-bottom:8px;font-size:32px}.section>p{text-align:center;color:var(--muted)}
+.tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:25px 0}.tab{background:var(--card);border:1px solid var(--line);color:var(--muted)}.tab.active{background:var(--accent);color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:25px}
+.card{background:linear-gradient(160deg,var(--card),#0f1729);border:1px solid var(--line);border-radius:18px;padding:20px;transition:.2s}.card:hover{transform:translateY(-4px);border-color:#4b5b8b}
+.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#22c7a9);font-size:23px;font-weight:800;margin-bottom:14px}
+.card h3{margin:5px 0}.role{color:#9c8cff;font-size:13px;font-weight:700}.desc{color:var(--muted);font-size:14px;line-height:1.5;min-height:62px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.tag{font-size:11px;padding:6px 8px;border-radius:99px;background:var(--card2);color:#cbd3e8}
+.rating{color:#ffd166;font-size:13px;margin:8px 0 14px}.price{font-weight:800;margin-bottom:14px}.card .btn{width:100%;text-align:center}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.step{text-align:center;padding:25px;background:var(--card);border:1px solid var(--line);border-radius:16px}.num{font-size:30px;font-weight:900;color:var(--accent)}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{width:min(520px,100%);background:#11192d;border:1px solid var(--line);border-radius:18px;padding:24px}.modalbox input,.modalbox textarea,.modalbox select{width:100%;margin:7px 0 12px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0b1222;color:white}.close{float:right;background:#26314c;padding:7px 11px}.empty{text-align:center;color:var(--muted);padding:35px}
+footer{text-align:center;padding:35px;color:var(--muted);border-top:1px solid var(--line);margin-top:30px}
+@media(max-width:650px){nav a{display:none}.search{flex-direction:column}.steps{grid-template-columns:1fr}.hero{padding-top:45px}}
+</style>
+</head>
+<body>
+<header><nav>
+<div class="logo">Creator<span>Hub</span></div>
+<div><a href="#talent">Find Talent</a><a href="#how">How It Works</a><a href="#profile">Create Profile</a></div>
+<button onclick="openModal()">Join as Creator</button>
+</nav></header>
+
+<section class="hero">
+<h1>Find the right <span>creator</span> for your project.</h1>
+<p>A marketplace where clients can discover video editors, thumbnail designers, and story script writers through professional profiles.</p>
+<div class="search"><input id="search" placeholder="Search editors, thumbnails, story writers..." oninput="render()"><button onclick="document.getElementById('talent').scrollIntoView({behavior:'smooth'})">Find Creator</button></div>
+</section>
+
+<section class="section" id="talent">
+<h2>Explore Creators</h2><p>Choose the service you need and contact a creator directly.</p>
+<div class="tabs">
+<button class="tab active" onclick="setCategory('All',this)">All</button>
+<button class="tab" onclick="setCategory('Editor',this)">🎬 Video Editors</button>
+<button class="tab" onclick="setCategory('Thumbnail',this)">🖼️ Thumbnail Designers</button>
+<button class="tab" onclick="setCategory('Story Writer',this)">✍️ Story Script Writers</button>
+</div>
+<div class="grid" id="grid"></div>
+</section>
+
+<section class="section" id="how">
+<h2>How CreatorHub Works</h2>
+<div class="steps">
+<div class="step"><div class="num">1</div><h3>Create a Profile</h3><p>Creators choose their service, add skills, portfolio details and starting price.</p></div>
+<div class="step"><div class="num">2</div><h3>Clients Search</h3><p>Clients browse profiles and filter by the exact creative service they need.</p></div>
+<div class="step"><div class="num">3</div><h3>Start a Project</h3><p>Clients open a profile and send a project request to the creator.</p></div>
+</div>
+</section>
+
+<section class="section" id="profile">
+<h2>Want to offer your skills?</h2><p>Create your creator profile and let clients find you.</p>
+<div style="text-align:center"><button onclick="openModal()">Create Creator Profile</button></div>
+</section>
+
+<div class="modal" id="modal">
+<div class="modalbox">
+<button class="close" onclick="closeModal()">✕</button>
+<h2>Create Creator Profile</h2>
+<form onsubmit="addProfile(event)">
+<label>Name</label><input id="name" required placeholder="Your name">
+<label>Service</label><select id="service"><option>Editor</option><option>Thumbnail</option><option>Story Writer</option></select>
+<label>Skills</label><input id="skills" required placeholder="e.g. CapCut, Premiere Pro, Anime">
+<label>Starting price</label><input id="price" required placeholder="e.g. ₹500 / project">
+<label>Short bio</label><textarea id="bio" rows="3" required placeholder="Tell clients what you can do..."></textarea>
+<button type="submit">Publish Profile</button>
+</form>
+</div></div>
+
+<footer>© 2026 CreatorHub — Connect clients with creative talent.</footer>
+
+<script>
+const profiles=[
+{name:"Arjun Editz",service:"Editor",skills:["CapCut","Premiere Pro","Anime"],price:"₹700 / video",bio:"Fast-paced YouTube, anime and Shorts editing.",rating:"★★★★★ 4.9"},
+{name:"PixelCraft",service:"Thumbnail",skills:["Photoshop","Canva","YouTube"],price:"₹250 / thumbnail",bio:"High-click YouTube thumbnails with bold visual design.",rating:"★★★★★ 4.8"},
+{name:"StoryVerse",service:"Story Writer",skills:["Anime","Horror","Fantasy"],price:"₹800 / script",bio:"Original anime, horror and cinematic story scripts.",rating:"★★★★★ 4.9"},
+{name:"VibeCuts",service:"Editor",skills:["Reels","Shorts","Color"],price:"₹500 / video",bio:"Short-form edits, transitions, captions and effects.",rating:"★★★★☆ 4.7"},
+{name:"ThumbKing",service:"Thumbnail",skills:["Photoshop","AI Art","Gaming"],price:"₹300 / thumbnail",bio:"Gaming, anime and storytelling thumbnails.",rating:"★★★★★ 4.8"},
+{name:"Katha Writer",service:"Story Writer",skills:["Hindi","Drama","Mystery"],price:"₹600 / script",bio:"Hindi and English scripts for YouTube and web stories.",rating:"★★★★☆ 4.7"}
+];
+let category="All";
+function setCategory(c,el){category=c;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));el.classList.add("active");render()}
+function render(){
+let q=document.getElementById("search").value.toLowerCase();
+let list=profiles.filter(p=>(category==="All"||p.service===category)&&((p.name+p.service+p.skills.join(" ")+p.bio).toLowerCase().includes(q)));
+let grid=document.getElementById("grid");
+grid.innerHTML=list.length?list.map((p,i)=>`<div class="card"><div class="avatar">${p.name.split(" ").map(x=>x[0]).join("").slice(0,2)}</div><div class="role">${p.service}</div><h3>${p.name}</h3><div class="desc">${p.bio}</div><div class="tags">${p.skills.map(s=>`<span class="tag">${s}</span>`).join("")}</div><div class="rating">${p.rating}</div><div class="price">Starting at ${p.price}</div><button class="btn" onclick="contact('${p.name}')">Contact Creator</button></div>`).join(""):"<div class='empty'>No creators found. Try another search.</div>";
+}
+function contact(name){alert("Project request for "+name+"\\n\\nIn the full version, this button can open chat, email, or a project request form.")}
+function openModal(){document.getElementById("modal").classList.add("show")}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function addProfile(e){
+e.preventDefault();
+profiles.unshift({name:name.value,service:service.value,skills:skills.value.split(",").map(x=>x.trim()).filter(Boolean),price:price.value,bio:bio.value,rating:"New creator"});
+closeModal();e.target.reset();category="All";document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelector(".tab").classList.add("active");render();document.getElementById("talent").scrollIntoView({behavior:"smooth"});
+}
+render();
+</script>
+</body>
+</html>
